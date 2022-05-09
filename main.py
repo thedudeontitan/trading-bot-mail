@@ -17,11 +17,12 @@ from mimetypes import guess_type as guess_mime_type
 from scraper import scrapedata
 import MetaTrader5 as mt5
 from tradingbot import connect
+from config import emailID,Sender_Email,Meta_Trader_Account_No,Meta_Trader_Password,Meta_Tarder_Server
 
 
 
 SCOPES = ['https://mail.google.com/']
-our_email = ''
+our_email = emailID
 
 def gmail_authenticate():
     creds = None
@@ -39,9 +40,9 @@ def gmail_authenticate():
     return build('gmail', 'v1', credentials=creds)
 
 service = gmail_authenticate()
-account = int()
-password=""
-server=""
+account = int(Meta_Trader_Account_No)
+password= Meta_Trader_Password
+server= Meta_Tarder_Server
 connect(account,password,server)
 def search_messages(service, query):
     result = service.users().messages().list(userId='me',q=query).execute()
@@ -139,7 +140,7 @@ def read_message(service, message):
     parse_parts(service, parts, folder_name, message)
     print("="*50)
 
-results = search_messages(service, "")
+results = search_messages(service, Sender_Email)
 results2 = search_messages(service, str(date.today().strftime("%d.%m.%Y")))
 
 for msg in results and results2:
